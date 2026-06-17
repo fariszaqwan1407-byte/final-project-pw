@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SELECT FRAME</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial;
+  text-transform:uppercase;
+}
+
+body{
+  background: linear-gradient(135deg,#ffc0cb,#ffe4ec);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.wrapper{
+  width:100%;
+  max-width:420px;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:10px;
+}
+
+/* preview area */
+.preview{
+  flex:1;
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.preview img{
+  width:100%;
+  border-radius:15px;
+}
+
+/* frame overlay */
+.frame{
+  position:absolute;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
+
+/* frame styles */
+.frame1{ border:12px solid gold; }
+.frame2{ border:12px solid pink; }
+.frame3{ border:12px solid white; }
+.frame4{
+  border:12px double rgba(0,0,0,0.3);
+}
+
+/* selector */
+.selector{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:5px;
+  margin-top:10px;
+}
+
+.btn{
+  padding:8px;
+  border:none;
+  border-radius:10px;
+  background:white;
+  font-size:10px;
+  cursor:pointer;
+}
+
+.submit{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(90deg,#ff69b4,#ff85c1);
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="wrapper">
+
+  <div class="preview">
+    <img id="photo">
+    <div id="frame" class="frame frame1"></div>
+  </div>
+
+  <div class="selector">
+    <button class="btn" onclick="setFrame(1)">F1</button>
+    <button class="btn" onclick="setFrame(2)">F2</button>
+    <button class="btn" onclick="setFrame(3)">F3</button>
+    <button class="btn" onclick="setFrame(4)">F4</button>
+  </div>
+
+  <button class="submit" onclick="submit()">SUBMIT</button>
+
+</div>
+
+<script>
+
+let photo = localStorage.getItem("photo");
+document.getElementById("photo").src = photo;
+
+let frameType = 1;
+
+function setFrame(n){
+  frameType = n;
+  let frame = document.getElementById("frame");
+  frame.className = "frame frame"+n;
+}
+
+async function submit(){
+
+  let name = localStorage.getItem("name");
+  let message = localStorage.getItem("message");
+  let image = localStorage.getItem("photo");
+
+  const GAS_URL = "PASTE_YOUR_GOOGLE_SCRIPT_URL";
+
+  const res = await fetch(GAS_URL, {
+    method:"POST",
+    body: JSON.stringify({
+      name:name,
+      message:message,
+      frame:frameType,
+      image:image
+    })
+  });
+
+  const data = await res.json();
+
+  if(data.success){
+    window.location.href = "thankyou.html";
+  } else {
+    alert("UPLOAD FAILED");
+    console.log(data);
+  }
+}
+
+</script>
+
+</body>
+</html>
