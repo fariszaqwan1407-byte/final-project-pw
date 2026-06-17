@@ -169,7 +169,10 @@ async function submit(){
       })
     });
 
-    const data = await res.json();
+    const text = await res.text();
+console.log("SERVER RESPONSE:", text);
+alert(text);
+return;
 
     console.log("UPLOAD RESULT:", data);
 
