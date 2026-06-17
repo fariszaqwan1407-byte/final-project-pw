@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SELECT FRAME</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial;
+  text-transform:uppercase;
+}
+
+body{
+  background: linear-gradient(135deg,#ffc0cb,#ffe4ec);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.wrapper{
+  width:100%;
+  max-width:420px;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  padding:10px;
+  gap:10px;
+}
+
+.preview{
+  flex:1;
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  border-radius:15px;
+  background:rgba(255,255,255,0.2);
+}
+
+.preview img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.frame{
+  position:absolute;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
+
+.frame1{ border:14px solid gold; }
+.frame2{ border:14px solid pink; }
+.frame3{ border:14px solid white; }
+.frame4{ border:14px double rgba(0,0,0,0.3); }
+
+.selector{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+
+.btn{
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  background:white;
+  font-size:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.submit{
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(90deg,#ff69b4,#ff85c1);
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.loading{
+  display:none;
+  text-align:center;
+  font-size:12px;
+  color:#fff;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="wrapper">
+
+  <div class="preview">
+    <img id="photo">
+    <div id="frame" class="frame frame1"></div>
+  </div>
+
+  <div class="selector">
+    <button class="btn" onclick="setFrame(1)">FRAME 1</button>
+    <button class="btn" onclick="setFrame(2)">FRAME 2</button>
+    <button class="btn" onclick="setFrame(3)">FRAME 3</button>
+    <button class="btn" onclick="setFrame(4)">FRAME 4</button>
+  </div>
+
+  <button class="submit" onclick="submit()">SUBMIT</button>
+
+  <div class="loading" id="loading">
+    UPLOADING... PLEASE WAIT
+  </div>
+
+</div>
+
+<script>
+
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyApBiHMbdYAnC_Sml8CIgDuA7HJlmKJpH4FwuHa4Xt9MlclFaqpnuX6BsP_hnPKHPQwA/exec";
+
+let frameType = 1;
+
+let photo = localStorage.getItem("photo");
+
+if(!photo){
+  alert("NO PHOTO FOUND. GO BACK CAMERA");
+  window.location.href = "camera.html";
+}
+
+document.getElementById("photo").src = photo;
+
+function setFrame(n){
+  frameType = n;
+  document.getElementById("frame").className = "frame frame"+n;
+}
+
+async function submit(){
+
+  const name = localStorage.getItem("name");
+  const message = localStorage.getItem("message");
+  const image = localStorage.getItem("photo");
+
+  if(!name || !message || !image){
+    alert("MISSING DATA. GO BACK START");
+    return;
+  }
+
+  document.getElementById("loading").style.display = "block";
+
+  try {
+
+    const res = await fetch(GAS_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: name,
+        message: message,
+        frame: frameType,
+        image: image
+      })
+    });
+
+    const data = await res.json();
+
+    console.log("UPLOAD RESULT:", data);
+
+    if(data.success){
+      localStorage.removeItem("photo");
+      window.location.href = "thankyou.html";
+    } else {
+      alert("UPLOAD FAILED: " + data.error);
+    }
+
+  } catch(err){
+    alert("NETWORK ERROR: " + err.message);
+    console.log(err);
+  }
+
+  document.getElementById("loading").style.display = "none";
+}
+
+</script>
+
+</body>
+</html>
