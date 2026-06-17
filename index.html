@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEDDING PHOTOBOMB</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+  text-transform: uppercase;
+}
+
+body{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: linear-gradient(135deg,#ffc0cb,#ffe4ec);
+  overflow:hidden;
+}
+
+/* decorative corners */
+.corner{
+  position:absolute;
+  width:120px;
+  height:120px;
+  border:2px solid rgba(255,255,255,0.3);
+  border-radius:20px;
+}
+.corner.tl{top:15px;left:15px;}
+.corner.tr{top:15px;right:15px;}
+.corner.bl{bottom:15px;left:15px;}
+.corner.br{bottom:15px;right:15px;}
+
+.container{
+  width:90%;
+  max-width:420px;
+  text-align:center;
+  animation: fadeIn 1s ease;
+}
+
+.title{
+  font-size:20px;
+  font-weight:bold;
+  color:#fff;
+  margin-bottom:20px;
+  animation: slideDown 1s ease;
+}
+
+/* glass card */
+.card{
+  background: rgba(144, 238, 144, 0.25);
+  backdrop-filter: blur(10px);
+  padding:20px;
+  border-radius:20px;
+  box-shadow:0 0 25px rgba(0,0,0,0.1);
+  animation: fadeUp 1.2s ease;
+}
+
+input, textarea{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border:none;
+  border-radius:12px;
+  outline:none;
+  font-size:12px;
+}
+
+textarea{
+  height:80px;
+  resize:none;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:12px;
+  background: linear-gradient(90deg,#ff69b4,#ff85c1);
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+  animation: glow 2s infinite;
+}
+
+button:hover{
+  transform:scale(1.05);
+}
+
+.hashtag{
+  margin-top:15px;
+  font-size:12px;
+  color:#fff;
+  opacity:0.8;
+}
+
+/* animations */
+@keyframes fadeIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+
+@keyframes slideDown{
+  from{transform:translateY(-20px);opacity:0;}
+  to{transform:translateY(0);opacity:1;}
+}
+
+@keyframes fadeUp{
+  from{transform:translateY(30px);opacity:0;}
+  to{transform:translateY(0);opacity:1;}
+}
+
+@keyframes glow{
+  0%{box-shadow:0 0 5px #ff69b4;}
+  50%{box-shadow:0 0 20px #ff85c1;}
+  100%{box-shadow:0 0 5px #ff69b4;}
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- corners -->
+<div class="corner tl"></div>
+<div class="corner tr"></div>
+<div class="corner bl"></div>
+<div class="corner br"></div>
+
+<div class="container">
+
+  <div class="title">
+    RAIKAN CINTA SHAFIQAH DAN FARIS
+  </div>
+
+  <div class="card">
+
+    <input type="text" id="name" placeholder="NAMA">
+    <textarea id="message" placeholder="UCAPAN"></textarea>
+
+    <button onclick="start()">START</button>
+
+    <div class="hashtag">
+      #1SHAFDIBELAKANGFARIS
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function start(){
+  const name = document.getElementById("name").value;
+  const msg = document.getElementById("message").value;
+
+  if(!name || !msg){
+    alert("SILA ISI NAMA DAN UCAPAN");
+    return;
+  }
+
+  localStorage.setItem("name", name);
+  localStorage.setItem("message", msg);
+
+  window.location.href = "camera.html";
+}
+</script>
+
+</body>
+</html>
